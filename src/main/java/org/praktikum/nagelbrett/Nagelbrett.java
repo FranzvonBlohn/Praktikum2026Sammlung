@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Pong extends Application {
+public class Nagelbrett extends Application {
 
     // These lists stores all circles that have been created
     public List<PongCircle> pongCircleList = new ArrayList<>();

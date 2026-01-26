@@ -58,7 +58,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>org.praktikum.nagelbrett.Pong</mainClass>
+                    <mainClass>org.praktikum.simulation.Simulation</mainClass>
                     <options>
                         <option>--add-modules</option>
                         <option>javafx.controls,javafx.fxml,javafx.graphics</option>
@@ -72,11 +72,23 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <mainClass>org.praktikum.nagelbrett.Pong</mainClass>
+                    <mainClass>org.praktikum.simulation.Simulation</mainClass>
                     <includePluginDependencies>true</includePluginDependencies>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>org/praktikum/aufgaben/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
+
+
     </build>
 
     <!-- Choose the correct native JavaFX classifiers via profiles -->
