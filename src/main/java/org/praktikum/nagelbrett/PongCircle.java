@@ -1,4 +1,4 @@
-package org.example;
+package org.praktikum.nagelbrett;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -29,7 +29,7 @@ public class PongCircle {
         this.dead = false;
         this.infected = false;
 
-        this.bouncyness = 0.5;
+        this.bouncyness = 0;
 
         this.velX = 0;
         this.velY = 0;

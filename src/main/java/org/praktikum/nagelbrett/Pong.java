@@ -1,4 +1,4 @@
-package org.example;
+package org.praktikum.nagelbrett;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -10,8 +10,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.example.PhysicPongCircle;
-import org.example.PongCircle;
 import javafx.animation.AnimationTimer;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +119,7 @@ public class Pong extends Application {
                 1000);
 
         // Set up and show the window
-        stage.setTitle("Nagelbrett");
+        stage.setTitle("nagelbrett");
         stage.setScene(scene);
         stage.show();
     }

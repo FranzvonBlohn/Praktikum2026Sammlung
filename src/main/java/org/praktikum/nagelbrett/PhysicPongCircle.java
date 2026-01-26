@@ -1,4 +1,4 @@
-package org.example;
+package org.praktikum.nagelbrett;
 
 import javafx.scene.paint.Color;
 import java.util.List;
@@ -91,7 +91,7 @@ public class PhysicPongCircle extends PongCircle {
             this.velY = -this.velY * this.bouncyness;
             this.y = canvasHeight - this.radius;
 
-            //this.infected = true;
+            this.infected = true;
         }
     }
 
