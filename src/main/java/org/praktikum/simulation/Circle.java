@@ -1,0 +1,33 @@
+package org.praktikum.simulation;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
+import java.awt.*;
+
+public class Circle extends Body{
+    protected double radius = 10;
+
+    public Circle(double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bouncyness,double mass, Color color, double radius) {
+        super(x,y,doPhysics, doGravity, doCollisions,bouncyness,mass, color);
+
+        this.radius = radius;
+    }
+
+    public void draw(GraphicsContext gc) {
+
+        gc.setFill(this.color);
+        // Draw a filled oval (circle)
+        gc.fillOval(
+                this.pos.x - this.radius,
+                this.pos.y - this.radius,
+                this.radius * 2,
+                this.radius * 2
+        );
+    }
+
+    public void onCollision (Body other) {
+        this.dead = true;
+    }
+
+}
