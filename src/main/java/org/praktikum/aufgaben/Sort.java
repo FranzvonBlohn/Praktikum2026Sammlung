@@ -1,9 +1,11 @@
-import javafx.application.Application;
+package org.praktikum.aufgaben;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
+public class Sort {
     public static void main(String[] args) {
         testSort("basic", 10, "random", 1000);
     }
@@ -178,6 +180,7 @@ import java.util.List;
         }
         return list;
     }
+}
 
 
 

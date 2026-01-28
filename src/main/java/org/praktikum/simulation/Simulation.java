@@ -109,13 +109,13 @@ public class Simulation extends Application {
 
         // create other objects
 
-        //create walls !Objects who dont do collision ignore the walls But i have not yet decided if this is a bug or a feature!
-        int wallWidth = 1000;
+        //create walls
+        int wallThickness = 1000;
 
-        Rectangle wallTop = new Rectangle(0 ,- wallWidth,false,false,true,0,1, Color.GREEN, canvasWidth, wallWidth); //top border
-        Rectangle wallLeft = new Rectangle( - wallWidth,0,false,false,true,0,1, Color.GREEN, wallWidth, canvasHeight); //Left border
-        Rectangle wallBottom = new Rectangle(0,canvasHeight,false,false,true,0,1, Color.GREEN,canvasWidth, wallWidth); //bottom border
-        Rectangle wallRight = new Rectangle(canvasWidth,0,false,false,true,0,1, Color.GREEN, wallWidth, canvasHeight); //right border
+        Rectangle wallTop = new Rectangle(0 ,-wallThickness,false,false,true,0,1, Color.GREEN, canvasWidth, wallThickness); //top border
+        Rectangle wallLeft = new Rectangle( -wallThickness,0,false,false,true,0,1, Color.GREEN, wallThickness, canvasHeight); //Left border
+        Rectangle wallBottom = new Rectangle(0,canvasHeight,false,false,true,0,1, Color.GREEN,canvasWidth, wallThickness); //bottom border
+        Rectangle wallRight = new Rectangle(canvasWidth,0,false,false,true,0,1, Color.GREEN, wallThickness, canvasHeight); //right border
 
         walls.add(wallTop); bodys.add(wallTop);
         walls.add(wallLeft); bodys.add(wallLeft);
@@ -202,12 +202,15 @@ public class Simulation extends Application {
     public void resolveCircleCircle(Circle a,Circle b) {
 
         //detect collisions
-        if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+        if (a.pos.distance(b.pos) < a.radius + b.radius) {
+
+
             a.onCollision(b);
             b.onCollision(a);
 
             //only do collision if both a and b do collision or if a or b is a wall
-            if ((a.doCollisions) && (b.doCollisions)){
+            if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+
                 //calculate the collision
 
                 //apply the movment if the bodies are not static (doPhysiks)
@@ -219,8 +222,8 @@ public class Simulation extends Application {
                     //changes to b
                 }
 
-            }
 
+            }
         }
     }
 
@@ -263,8 +266,8 @@ public class Simulation extends Application {
                 Math.pow(b.pos.y - Math.max(a.pos.y, Math.min(b.pos.y, a.pos.y + a.height)), 2)
                 <= b.radius * b.radius ) {
 
-            a.onCollision((Body) b);
-            b.onCollision((Body) a);
+            a.onCollision(b);
+            b.onCollision(a);
 
             //only do collision if both a and b do collision or if a or b is a wall
             if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {

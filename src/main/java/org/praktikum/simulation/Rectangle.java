@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 
 public class Rectangle extends Body{
-    protected double width = 10;
-    protected double height = 10;
+    protected double width;
+    protected double height;
 
     public Rectangle(double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bounciness,double mass, Color color, double width, double height) {
         super(x,y,doPhysics, doGravity, doCollisions,bounciness,mass, color);

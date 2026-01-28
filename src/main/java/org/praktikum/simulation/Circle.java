@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 
 public class Circle extends Body{
-    protected double radius = 10;
+    protected double radius;
 
     public Circle(double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bounciness,double mass, Color color, double radius) {
         super(x,y,doPhysics, doGravity, doCollisions,bounciness,mass, color);

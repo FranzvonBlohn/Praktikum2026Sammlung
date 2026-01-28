@@ -4,24 +4,23 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Body {
-    protected Vector2D pos = new Vector2D(500,500);
+    protected Vector2D pos;
     protected Vector2D vel = new Vector2D(0,0);
 
-    protected boolean doPhysics = false;
-    protected boolean doGravity = false;
-    protected boolean doCollisions = false;
+    protected boolean doPhysics;
+    protected boolean doGravity;
+    protected boolean doCollisions;
 
-    protected double bounciness = 0;
-    protected double mass = 1;
+    protected double bounciness;
+    protected double mass;
 
     protected boolean dead = false;
 
-    protected Color color= Color.RED;
+    protected Color color;
 
     public Body (double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bounciness ,double mass, Color color) {
 
-        this.pos.x = x;
-        this.pos.y = y;
+        this.pos = new Vector2D(x,y);
 
         this.doPhysics = doPhysics;
         this.doGravity = doGravity;
