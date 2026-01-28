@@ -2,7 +2,6 @@ package org.praktikum.simulation;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,14 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.praktikum.pong.PongCircle;
-import org.praktikum.simulation.Vector2D;
-import org.praktikum.simulation.Body;
-
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,10 +59,10 @@ public class Simulation extends Application {
                 canvas.setOnMouseClicked(e -> {
 
                     if (e.getButton() == MouseButton.PRIMARY) {
-                        bodys.add(new Circle(e.getX(),e.getY(),true,false,false,0,1, Color.GREEN, 50));
+                        bodys.add(new Circle(e.getX(),e.getY(),true,false,true,0,1, Color.YELLOW, 50));
                     }
                     if (e.getButton() == MouseButton.SECONDARY) {
-                        bodys.add(new Rectangle(e.getX(),e.getY(),true,true,false,0,1, Color.GREEN, 50, 100));
+                        bodys.add(new Rectangle(e.getX(),e.getY(),true,false,true,0,1, Color.GREEN, 50, 50));
                     }
 
                 });
@@ -80,9 +72,7 @@ public class Simulation extends Application {
                     KeyCode code = e.getCode();
                     switch (code) {
                         case SPACE:
-                            for (int i = 0; i < bodys.size(); i++) {
-                                bodys.get(i).dead = true;
-                            }
+                            for (Body body : bodys) body.dead = true;
                     }
 
 
@@ -119,11 +109,11 @@ public class Simulation extends Application {
 
         // create other objects
 
-        //create walls
-        int wallWidth = 10;
+        //create walls !Objects who dont do collision ignore the walls But i have not yet decided if this is a bug or a feature!
+        int wallWidth = 1000;
 
-        Rectangle wallTop = new Rectangle(0 ,0 - wallWidth,false,false,true,0,1, Color.GREEN, canvasWidth, wallWidth); //top border
-        Rectangle wallLeft = new Rectangle(0 - wallWidth,0,false,false,true,0,1, Color.GREEN, wallWidth, canvasHeight); //Left border
+        Rectangle wallTop = new Rectangle(0 ,- wallWidth,false,false,true,0,1, Color.GREEN, canvasWidth, wallWidth); //top border
+        Rectangle wallLeft = new Rectangle( - wallWidth,0,false,false,true,0,1, Color.GREEN, wallWidth, canvasHeight); //Left border
         Rectangle wallBottom = new Rectangle(0,canvasHeight,false,false,true,0,1, Color.GREEN,canvasWidth, wallWidth); //bottom border
         Rectangle wallRight = new Rectangle(canvasWidth,0,false,false,true,0,1, Color.GREEN, wallWidth, canvasHeight); //right border
 
@@ -147,7 +137,6 @@ public class Simulation extends Application {
 
 
             //only update the ball if it does Physiks
-            if (bodys.get(i).doPhysics) {
 
                 //apply gravity
                 if (bodys.get(i).doGravity) {
@@ -166,11 +155,12 @@ public class Simulation extends Application {
 
                 }
 
-
+                //function for special behavor that get called every frame
+                bodys.get(i).special();
 
                 //update the position
                 bodys.get(i).updatePos();
-            }
+
 
         }
 
@@ -181,8 +171,8 @@ public class Simulation extends Application {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        for (int i = 0; i < bodys.size(); i++) {
-            bodys.get(i).draw(gc);
+        for (Body body : bodys) {
+            body.draw(gc);
         }
 
     }
@@ -195,20 +185,104 @@ public class Simulation extends Application {
 
         } else if (((a instanceof Circle) && (b instanceof Rectangle))) {
             //circle rectangle collision
+            resolveRectangleCircle((Rectangle) b, (Circle) a);
+
         } else if (((a instanceof Rectangle) && (b instanceof Circle))) {
-            //rectangle circle colliosion
+            //rectangle circle collision
+            resolveRectangleCircle((Rectangle) a, (Circle) b);
+
         } else if (((a instanceof Rectangle) && (b instanceof Rectangle))) {
             //rectangle rectangle collision
+            resolveRectangleRectangle((Rectangle) a, (Rectangle) b);
+
         }
 
     }
 
     public void resolveCircleCircle(Circle a,Circle b) {
 
-        if (a.pos.distance(b.pos) < a.radius + b.radius)
-            a.onCollision( (Body) b);
-            b.onCollision( (Body) a);
+        //detect collisions
+        if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+            a.onCollision(b);
+            b.onCollision(a);
+
+            //only do collision if both a and b do collision or if a or b is a wall
+            if ((a.doCollisions) && (b.doCollisions)){
+                //calculate the collision
+
+                //apply the movment if the bodies are not static (doPhysiks)
+                if (a.doPhysics) {
+                    //changes to a
+                }
+
+                if (b.doPhysics) {
+                    //changes to b
+                }
+
+            }
+
         }
+    }
+
+    public void resolveRectangleRectangle(Rectangle a, Rectangle b) {
+
+        //detect collisions using aabb
+        if (a.pos.x < b.pos.x + b.width &&
+                a.pos.x + a.width > b.pos.x &&
+                a.pos.y < b.pos.y + b.height &&
+                a.pos.y + a.height > b.pos.y) {
+
+
+            a.onCollision(b);
+            b.onCollision(a);
+
+            //only do collision if both a and b do collision or if a or b is a wall
+            if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+
+                //calculate the collision
+
+                //apply the movment if the bodies are not static (doPhysiks)
+                if (a.doPhysics) {
+                    //changes to a
+                }
+
+                if (b.doPhysics) {
+                    //changes to b
+                }
+
+
+            }
+        }
+    }
+
+
+    public void resolveRectangleCircle(Rectangle a, Circle b) {
+
+        //detect collisions using Blackmagic (fincding closet point on rect to circle and checking if it is within radius)
+        if ( Math.pow(b.pos.x - Math.max(a.pos.x, Math.min(b.pos.x, a.pos.x + a.width)), 2) +
+                Math.pow(b.pos.y - Math.max(a.pos.y, Math.min(b.pos.y, a.pos.y + a.height)), 2)
+                <= b.radius * b.radius ) {
+
+            a.onCollision((Body) b);
+            b.onCollision((Body) a);
+
+            //only do collision if both a and b do collision or if a or b is a wall
+            if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+                //calculate the collision
+
+                //apply the movment if the bodies are not static (doPhysiks)
+                if (a.doPhysics) {
+                    //changes to a
+                }
+
+                if (b.doPhysics) {
+                    //changes to b
+                }
+            }
+        }
+    }
+
+
 
 
     public static void main(String[] args) {

@@ -8,12 +8,13 @@ import java.awt.*;
 public class Circle extends Body{
     protected double radius = 10;
 
-    public Circle(double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bouncyness,double mass, Color color, double radius) {
-        super(x,y,doPhysics, doGravity, doCollisions,bouncyness,mass, color);
+    public Circle(double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bounciness,double mass, Color color, double radius) {
+        super(x,y,doPhysics, doGravity, doCollisions,bounciness,mass, color);
 
         this.radius = radius;
     }
 
+    @Override
     public void draw(GraphicsContext gc) {
 
         gc.setFill(this.color);
@@ -26,8 +27,9 @@ public class Circle extends Body{
         );
     }
 
+    @Override
     public void onCollision (Body other) {
-        this.dead = true;
+        this.color = Color.BLUE;
     }
 
 }

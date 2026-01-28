@@ -11,14 +11,14 @@ public class Body {
     protected boolean doGravity = false;
     protected boolean doCollisions = false;
 
-    protected double bouncyness = 0;
+    protected double bounciness = 0;
     protected double mass = 1;
 
     protected boolean dead = false;
 
     protected Color color= Color.RED;
 
-    public Body (double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bouncyness,double mass, Color color) {
+    public Body (double x,double y, boolean doPhysics, boolean doGravity, boolean doCollisions,double bounciness ,double mass, Color color) {
 
         this.pos.x = x;
         this.pos.y = y;
@@ -27,13 +27,14 @@ public class Body {
         this.doGravity = doGravity;
         this.doCollisions = doCollisions;
 
-        this.bouncyness = bouncyness;
+        this.bounciness = bounciness;
         this.mass = mass;
 
         this.color = color;
     }
 
     //Methode to be overriden by child methodes
+
     public void draw(GraphicsContext gc) {}
 
     public void gravity (Vector2D gravity) {
@@ -45,5 +46,7 @@ public class Body {
     }
 
     public void onCollision(Body other) {}
+
+    public void special() {}
 
 }
