@@ -26,5 +26,6 @@ public class Rectangle extends Body{
     @Override
     public void onCollision(Body other) {
         this.color = Color.RED;
+        super.onCollision(other);
     }
 }

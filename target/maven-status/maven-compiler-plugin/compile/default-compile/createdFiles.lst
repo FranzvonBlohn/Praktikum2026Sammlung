@@ -1,5 +1,6 @@
 org\praktikum\nagelbrett\Nagelbrett$2.class
 org\praktikum\pong\Pong$1.class
+org\praktikum\simulation\Border.class
 org\praktikum\simulation\Vector2D.class
 org\praktikum\nagelbrett\PhysicPongCircle.class
 org\praktikum\nagelbrett\Nagelbrett$1.class

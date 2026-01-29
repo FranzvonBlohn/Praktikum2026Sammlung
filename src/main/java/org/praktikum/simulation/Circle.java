@@ -30,6 +30,6 @@ public class Circle extends Body{
     @Override
     public void onCollision (Body other) {
         this.color = Color.BLUE;
+        super.onCollision(other);
     }
-
-}
+    }

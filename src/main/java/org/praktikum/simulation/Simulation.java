@@ -28,7 +28,6 @@ public class Simulation extends Application {
 
     //store all bodys
     public List<Body> bodys = new ArrayList<>();
-    public List<Body> walls = new ArrayList<>();
 
 
     //create gravity
@@ -59,10 +58,10 @@ public class Simulation extends Application {
                 canvas.setOnMouseClicked(e -> {
 
                     if (e.getButton() == MouseButton.PRIMARY) {
-                        bodys.add(new Circle(e.getX(),e.getY(),true,false,true,0,1, Color.YELLOW, 50));
+                        bodys.add(new Circle(e.getX(),e.getY(),true,false,true,0.5,1, Color.YELLOW, 50));
                     }
                     if (e.getButton() == MouseButton.SECONDARY) {
-                        bodys.add(new Rectangle(e.getX(),e.getY(),true,false,true,0,1, Color.GREEN, 50, 50));
+                        bodys.add(new Rectangle(e.getX(),e.getY(),true,false,true,0.5,1, Color.GREEN, 50, 50));
                     }
 
                 });
@@ -109,18 +108,13 @@ public class Simulation extends Application {
 
         // create other objects
 
-        //create walls
-        int wallThickness = 1000;
+        //create borders
+        int borderThickness = 1000;
 
-        Rectangle wallTop = new Rectangle(0 ,-wallThickness,false,false,true,0,1, Color.GREEN, canvasWidth, wallThickness); //top border
-        Rectangle wallLeft = new Rectangle( -wallThickness,0,false,false,true,0,1, Color.GREEN, wallThickness, canvasHeight); //Left border
-        Rectangle wallBottom = new Rectangle(0,canvasHeight,false,false,true,0,1, Color.GREEN,canvasWidth, wallThickness); //bottom border
-        Rectangle wallRight = new Rectangle(canvasWidth,0,false,false,true,0,1, Color.GREEN, wallThickness, canvasHeight); //right border
-
-        walls.add(wallTop); bodys.add(wallTop);
-        walls.add(wallLeft); bodys.add(wallLeft);
-        walls.add(wallRight);   bodys.add(wallRight);
-        walls.add(wallBottom);  bodys.add(wallBottom);
+        bodys.add(new Border(-(canvasWidth/2), -borderThickness ,false,false,true, 0,1,Color.BLACK, canvasWidth*2, borderThickness)); //Top
+        bodys.add(new Border(-(canvasWidth/2), canvasHeight ,false,false,true, 0,1,Color.BLACK, canvasWidth*2, borderThickness)); //Bottom
+        bodys.add(new Border( -borderThickness, - (canvasHeight/2),false,false,true, 0,1,Color.BLACK,  borderThickness, canvasHeight*2)); // Left
+        bodys.add(new Border(canvasWidth, -(canvasHeight/2),false,false,true, 0,1,Color.BLACK, borderThickness, canvasHeight*2)); //Right
 
 
     }
@@ -135,31 +129,28 @@ public class Simulation extends Application {
                 return;
             }
 
+            //apply gravity
+            if (bodys.get(i).doGravity) {
+                bodys.get(i).gravity(gravity);
+            }
 
-            //only update the ball if it does Physiks
+            //check collions
+            for (int other = i; other < bodys.size(); other++) {
 
-                //apply gravity
-                if (bodys.get(i).doGravity) {
-                    bodys.get(i).gravity(gravity);
+                //skip collisions with self
+                if (i == other) {
+                    continue;
                 }
 
-                //check collions
-                for (int other = i; other < bodys.size(); other++) {
+                handelCollision(bodys.get(i),bodys.get(other));
 
-                    //skip collisions with self
-                    if (i == other) {
-                        continue;
-                    }
+            }
 
-                    handelCollision(bodys.get(i),bodys.get(other));
+            //function for special behavor that get called every frame
+            bodys.get(i).special();
 
-                }
-
-                //function for special behavor that get called every frame
-                bodys.get(i).special();
-
-                //update the position
-                bodys.get(i).updatePos();
+            //update the position
+            bodys.get(i).updatePos();
 
 
         }
@@ -208,8 +199,8 @@ public class Simulation extends Application {
             a.onCollision(b);
             b.onCollision(a);
 
-            //only do collision if both a and b do collision or if a or b is a wall
-            if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+            //only do collision if both a and b do collision or if a or b is a border doesnt get ckecked for circls
+            if ((a.doCollisions) && (b.doCollisions)) {
 
                 //calculate the collision
 
@@ -240,7 +231,7 @@ public class Simulation extends Application {
             b.onCollision(a);
 
             //only do collision if both a and b do collision or if a or b is a wall
-            if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+            if (( (a.doCollisions) && (b.doCollisions)) || (a instanceof Border) || (b instanceof Border)) {
 
                 //calculate the collision
 
@@ -270,7 +261,7 @@ public class Simulation extends Application {
             b.onCollision(a);
 
             //only do collision if both a and b do collision or if a or b is a wall
-            if (((a.doCollisions) && (b.doCollisions)) || (walls.contains(a) || walls.contains(b))) {
+            if (((a.doCollisions) && (b.doCollisions)) || (a instanceof Border)) {
                 //calculate the collision
 
                 //apply the movment if the bodies are not static (doPhysiks)
